@@ -155,6 +155,8 @@ func (s *Scheduler) Solve(ctx context.Context, pods []*v1.Pod) *Results {
 			continue
 		}
 
+		logging.FromContext(ctx).With("pod", client.ObjectKeyFromObject(pod)).Infof("Could not schedule pod without relaxing topology requirements, %s", errors[pod])
+
 		// If unsuccessful, relax the pod and recompute topology
 		relaxed := s.preferences.Relax(ctx, pod)
 		q.Push(pod, relaxed)
